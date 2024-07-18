@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 
 namespace ApiTest.Models;
-public class CommentModel
+public class Comment
 {
     [Key]
     public int Id { get; set; }
@@ -14,5 +14,5 @@ public class CommentModel
     public string Content { get; set; } = string.Empty;
     public DateTime CreatedOn { get; set; } = DateTime.Now;
     public int? StockId { get; set; }
-    public StockModel? Stock { get; set; }
+    public Stock? Stock { get; set; }
 }

@@ -13,6 +13,6 @@ public class ApplicationDBContext : DbContext
     {
 
     }
-    public DbSet<StockModel> Stock { get; set; }
-    public DbSet<CommentModel> Comments { get; set; }
+    public DbSet<Stock> Stock { get; set; }
+    public DbSet<Comment> Comments { get; set; }
 }
