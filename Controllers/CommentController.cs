@@ -2,8 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using API_A.Dtos.CommentDTO;
+using API_A.Interfaces;
 using ApiTest.Data;
 using ApiTest.Mappers;
+using ApiTest.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,19 +14,41 @@ namespace ApiTest.Controllers;
 
 [Route("api/comments")]
 [ApiController]
-public class CommentController : ControllerBase
+public class CommentController(ICommentRepository commentRepo, IStockRepository stockRepo)
+: ControllerBase
 {
-    private readonly ApplicationDBContext _context;
-    public CommentController(ApplicationDBContext context)
-    {
-        _context = context;
-    }
-
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var Comments = await _context.Comments.ToListAsync();
-        var CommentsDTO = Comments.Select(row => row.toCommentDTO());
-        return Ok(CommentsDTO);
+        var comments = await commentRepo.GetAllAsync();
+        var commentsDTO = comments.Select(row => row.toCommentDTO());
+        return Ok(commentsDTO);
+    }
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetById([FromRoute] int id)
+    {
+        Comment? comment = await commentRepo.GetByIdAsync(id);
+        if (comment == null)
+        {
+            return NotFound();
+        }
+        return Ok(comment.toCommentDTO());
+    }
+
+    [HttpDelete]
+    [Route("{id}")]
+    public async Task<IActionResult> Delete([FromRoute] int id)
+    {
+        Comment? comment = await commentRepo.DeleteAsync(id);
+        if (comment == null) return NotFound();
+        return NoContent();
+    }
+    [HttpPost("{stockId}")]
+    public async Task<IActionResult> Create([FromRoute] int stockId, [FromBody] CreateCommentRequestDTO _comment)
+    {
+        if (!await stockRepo.StockExists(stockId)) return BadRequest("Stock does not exist!");
+        Comment commentModel = _comment.fromCreateToComment(stockId);
+        await commentRepo.CreateAsync(commentModel);
+        return CreatedAtAction(nameof(GetById), new { id = commentModel }, commentModel.toCommentDTO());
     }
 }

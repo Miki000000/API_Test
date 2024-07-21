@@ -22,7 +22,7 @@ namespace ApiTest.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("ApiTest.Models.CommentModel", b =>
+            modelBuilder.Entity("ApiTest.Models.Comment", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -51,7 +51,7 @@ namespace ApiTest.Migrations
                     b.ToTable("Comments");
                 });
 
-            modelBuilder.Entity("ApiTest.Models.StockModel", b =>
+            modelBuilder.Entity("ApiTest.Models.Stock", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -85,16 +85,16 @@ namespace ApiTest.Migrations
                     b.ToTable("Stock");
                 });
 
-            modelBuilder.Entity("ApiTest.Models.CommentModel", b =>
+            modelBuilder.Entity("ApiTest.Models.Comment", b =>
                 {
-                    b.HasOne("ApiTest.Models.StockModel", "Stock")
+                    b.HasOne("ApiTest.Models.Stock", "Stock")
                         .WithMany("Comments")
                         .HasForeignKey("StockId");
 
                     b.Navigation("Stock");
                 });
 
-            modelBuilder.Entity("ApiTest.Models.StockModel", b =>
+            modelBuilder.Entity("ApiTest.Models.Stock", b =>
                 {
                     b.Navigation("Comments");
                 });
