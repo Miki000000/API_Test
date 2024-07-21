@@ -1,25 +1,28 @@
 {
   "format": 1,
   "restore": {
-    "/home/vitor/projects/API_A/ApiTest.csproj": {}
+    "C:\\Nova pasta\\ApiTest.csproj": {}
   },
   "projects": {
-    "/home/vitor/projects/API_A/ApiTest.csproj": {
+    "C:\\Nova pasta\\ApiTest.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/vitor/projects/API_A/ApiTest.csproj",
+        "projectUniqueName": "C:\\Nova pasta\\ApiTest.csproj",
         "projectName": "ApiTest",
-        "projectPath": "/home/vitor/projects/API_A/ApiTest.csproj",
-        "packagesPath": "/home/vitor/.nuget/packages/",
-        "outputPath": "/home/vitor/projects/API_A/obj/",
+        "projectPath": "C:\\Nova pasta\\ApiTest.csproj",
+        "packagesPath": "C:\\Users\\Miki\\.nuget\\packages\\",
+        "outputPath": "C:\\Nova pasta\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/home/vitor/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\Miki\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -32,6 +35,11 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -78,12 +86,6 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "downloadDependencies": [
-            {
-              "name": "Microsoft.AspNetCore.App.Ref",
-              "version": "[8.0.6, 8.0.6]"
-            }
-          ],
           "frameworkReferences": {
             "Microsoft.AspNetCore.App": {
               "privateAssets": "none"
@@ -92,7 +94,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/8.0.106/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
