@@ -89,7 +89,8 @@ namespace ApiTest.Migrations
                 {
                     b.HasOne("ApiTest.Models.Stock", "Stock")
                         .WithMany("Comments")
-                        .HasForeignKey("StockId");
+                        .HasForeignKey("StockId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Stock");
                 });

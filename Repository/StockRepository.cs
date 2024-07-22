@@ -33,7 +33,9 @@ public class StockRepository(ApplicationDBContext context)
 
     public async Task<List<Stock>> GetAllAsync()
     {
-        return await context.Stock.Include(table => table.Comments).ToListAsync();
+        return await context.Stock
+        .Include(table => table.Comments)
+        .ToListAsync();
     }
 
     public async Task<Stock?> GetByIdAsync(int id)

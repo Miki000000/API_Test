@@ -25,7 +25,7 @@ public class StockController(IStockRepository stockRepo)
         var StocksDTO = Stocks.Select(s => s.ToStockDTO());
         return Ok(StocksDTO);
     }
-    [HttpGet("{id}")]
+    [HttpGet("{id:int}")]
     public async Task<IActionResult> GetById([FromRoute] int id) // Get the data passed by the route  (url), and converts it into a integer
     {
         Stock? Stock = await stockRepo.GetByIdAsync(id);
@@ -39,7 +39,7 @@ public class StockController(IStockRepository stockRepo)
         return CreatedAtAction(nameof(GetById), new { id = stockModel.Id }, stockModel.ToStockDTO()); // Return the created model as a response
     }
 
-    [HttpPut("{id}")]
+    [HttpPut("{id:int}")]
     public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateStockRequestDTO updateDTO)
     {
         Stock? stock = await stockRepo.UpdateAsync(id, updateDTO);
@@ -49,7 +49,7 @@ public class StockController(IStockRepository stockRepo)
     }
 
     [HttpDelete]
-    [Route("{id}")]
+    [Route("{id:int}")]
     public async Task<IActionResult> Delete([FromRoute] int id)
     {
         Stock? stock = await stockRepo.DeleteAsync(id);

@@ -48,7 +48,8 @@ namespace ApiTest.Migrations
                         name: "FK_Comments_Stock_StockId",
                         column: x => x.StockId,
                         principalTable: "Stock",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(

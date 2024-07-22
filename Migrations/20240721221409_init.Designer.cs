@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ApiTest.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20240721023148_init")]
+    [Migration("20240721221409_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -92,7 +92,8 @@ namespace ApiTest.Migrations
                 {
                     b.HasOne("ApiTest.Models.Stock", "Stock")
                         .WithMany("Comments")
-                        .HasForeignKey("StockId");
+                        .HasForeignKey("StockId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Stock");
                 });
