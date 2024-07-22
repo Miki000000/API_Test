@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using API_A.Interfaces;
@@ -31,21 +32,28 @@ public class StockRepository(ApplicationDBContext context)
         await context.SaveChangesAsync();
         return stockModel;
     }
-
     public async Task<List<Stock>> GetAllAsync(QueryObject query)
     {
         var stocks = context.Stock
         .Include(table => table.Comments)
         .AsQueryable();
-        if (!string.IsNullOrWhiteSpace(query.CompanyName))
+        stocks = !string.IsNullOrWhiteSpace(query.CompanyName) ? stocks = stocks.Where(s => s.CompanyName.Contains(query.CompanyName)) : stocks;
+        stocks = !string.IsNullOrWhiteSpace(query.Symbol) ? stocks = stocks.Where(s => s.Symbol.Contains(query.Symbol)) : stocks;
+        if (!string.IsNullOrWhiteSpace(query.SortBy))
         {
-            stocks = stocks.Where(s => s.CompanyName.Contains(query.CompanyName));
+            if (query.SortBy.Equals("Symbol", StringComparison.OrdinalIgnoreCase))
+            {
+                stocks = query.IsDescencing ? stocks.OrderBy(s => s.Symbol) : stocks.OrderByDescending(s => s.Symbol);
+            }
+            if (query.SortBy.Equals("CompanyName", StringComparison.OrdinalIgnoreCase))
+            {
+                stocks = query.IsDescencing ? stocks.OrderBy(s => s.CompanyName) : stocks.OrderByDescending(s => s.CompanyName);
+            }
         }
-        if (!string.IsNullOrWhiteSpace(query.Symbol))
-        {
-            stocks = stocks.Where(s => s.Symbol.Contains(query.Symbol));
-        }
-        return await stocks.ToListAsync();
+        int skipNumber = (query.PageNumber - 1) * query.PageSize;
+        return await stocks
+        .Skip(skipNumber).Take(query.PageSize)
+        .ToListAsync();
     }
 
     public async Task<Stock?> GetByIdAsync(int id)
