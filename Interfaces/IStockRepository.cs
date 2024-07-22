@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ApiTest.Dtos.StockDTO;
+using ApiTest.Helpers;
 using ApiTest.Models;
 
 namespace API_A.Interfaces;
 
 public interface IStockRepository
 {
-    Task<List<Stock>> GetAllAsync();
+    Task<List<Stock>> GetAllAsync(QueryObject query);
     Task<Stock?> GetByIdAsync(int id);
     Task<Stock> CreateAsync(CreateStockRequestDTO stockModel);
     Task<Stock?> UpdateAsync(int id, UpdateStockRequestDTO stockDTO);

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using API_A.Interfaces;
 using ApiTest.Data;
 using ApiTest.Dtos.StockDTO;
+using ApiTest.Helpers;
 using ApiTest.Mappers;
 using ApiTest.Models;
 using Microsoft.EntityFrameworkCore;
@@ -31,11 +32,20 @@ public class StockRepository(ApplicationDBContext context)
         return stockModel;
     }
 
-    public async Task<List<Stock>> GetAllAsync()
+    public async Task<List<Stock>> GetAllAsync(QueryObject query)
     {
-        return await context.Stock
+        var stocks = context.Stock
         .Include(table => table.Comments)
-        .ToListAsync();
+        .AsQueryable();
+        if (!string.IsNullOrWhiteSpace(query.CompanyName))
+        {
+            stocks = stocks.Where(s => s.CompanyName.Contains(query.CompanyName));
+        }
+        if (!string.IsNullOrWhiteSpace(query.Symbol))
+        {
+            stocks = stocks.Where(s => s.Symbol.Contains(query.Symbol));
+        }
+        return await stocks.ToListAsync();
     }
 
     public async Task<Stock?> GetByIdAsync(int id)

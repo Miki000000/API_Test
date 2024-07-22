@@ -30,4 +30,12 @@ public static class CommentMapper
             StockId = stockId
         };
     }
+    public static Comment fromUpdateToComment(this UpdateCommentRequestDTO comment)
+    {
+        return new Comment
+        {
+            Content = comment.Content,
+            Title = comment.Title,
+        };
+    }
 }

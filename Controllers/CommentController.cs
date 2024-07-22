@@ -24,7 +24,7 @@ public class CommentController(ICommentRepository commentRepo, IStockRepository 
         var commentsDTO = comments.Select(row => row.toCommentDTO());
         return Ok(commentsDTO);
     }
-    [HttpGet("{id}")]
+    [HttpGet("{id:int}")]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
         Comment? comment = await commentRepo.GetByIdAsync(id);
@@ -36,19 +36,26 @@ public class CommentController(ICommentRepository commentRepo, IStockRepository 
     }
 
     [HttpDelete]
-    [Route("{id}")]
+    [Route("{id:int}")]
     public async Task<IActionResult> Delete([FromRoute] int id)
     {
         Comment? comment = await commentRepo.DeleteAsync(id);
         if (comment == null) return NotFound();
         return NoContent();
     }
-    [HttpPost("{stockId}")]
+    [HttpPost("{stockId:int}")]
     public async Task<IActionResult> Create([FromRoute] int stockId, [FromBody] CreateCommentRequestDTO _comment)
     {
         if (!await stockRepo.StockExists(stockId)) return BadRequest("Stock does not exist!");
         Comment commentModel = _comment.fromCreateToComment(stockId);
         await commentRepo.CreateAsync(commentModel);
         return CreatedAtAction(nameof(GetById), new { id = commentModel }, commentModel.toCommentDTO());
+    }
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateCommentRequestDTO _comment)
+    {
+        Comment? comment = await commentRepo.UpdateAsync(id, _comment);
+        if (comment == null) return NotFound();
+        return Ok(comment.toCommentDTO());
     }
 }

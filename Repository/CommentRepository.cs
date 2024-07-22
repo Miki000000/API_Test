@@ -39,4 +39,15 @@ public class CommentRepository(ApplicationDBContext context) : ICommentRepositor
     {
         return await context.Comments.FirstOrDefaultAsync(row => row.Id == id);
     }
+
+    public async Task<Comment?> UpdateAsync(int id, UpdateCommentRequestDTO comment)
+    {
+        Comment? existingComment = await context.Comments.FirstOrDefaultAsync(row => row.Id == id);
+        if (existingComment == null) return null;
+        existingComment.Content = comment.Content;
+        existingComment.Title = comment.Title;
+        await context.SaveChangesAsync();
+
+        return existingComment;
+    }
 }

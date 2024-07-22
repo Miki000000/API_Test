@@ -6,6 +6,7 @@ using API_A.Interfaces;
 using API_A.Repository;
 using ApiTest.Data;
 using ApiTest.Dtos.StockDTO;
+using ApiTest.Helpers;
 using ApiTest.Mappers;
 using ApiTest.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -19,9 +20,9 @@ public class StockController(IStockRepository stockRepo)
 : ControllerBase
 {
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll([FromQuery] QueryObject query)
     {
-        List<Stock> Stocks = await stockRepo.GetAllAsync();
+        List<Stock> Stocks = await stockRepo.GetAllAsync(query);
         var StocksDTO = Stocks.Select(s => s.ToStockDTO());
         return Ok(StocksDTO);
     }

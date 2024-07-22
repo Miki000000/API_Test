@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace API_A.Dtos.CommentDTO;
 
-public class CreateCommentRequestDTO
+public class UpdateCommentRequestDTO
 {
     [Required]
     [MinLength(5, ErrorMessage = "The title must be at least 5 characters")]
