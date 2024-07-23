@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using API_A.Models;
 using ApiTest.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -26,5 +27,13 @@ public class ApplicationDBContext : IdentityDbContext<AppUser>
             .WithOne(c => c.Stock)
             .HasForeignKey(c => c.StockId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        List<IdentityRole> roles = new List<IdentityRole>
+        {
+            new IdentityRole{ Name = "Admin", NormalizedName = "ADMIN"},
+            new IdentityRole{ Name = "User", NormalizedName = "USER"}
+        };
+        modelBuilder.Entity<IdentityRole>()
+            .HasData(roles);
     }
 }

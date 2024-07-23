@@ -16,6 +16,11 @@ namespace API_A.Repository;
 public class StockRepository(ApplicationDBContext context)
 : IStockRepository
 {
+    /// <summary>
+    /// The method <c>CreateAsync</c> create in the Stock Table a item following the CreateStockRequestDTO passed by parameter.
+    /// </summary>
+    /// <param name="_stockModel">The parameter recieve every property necessary to create a Stock item</param>
+    /// <returns>Stock created</returns>
     public async Task<Stock> CreateAsync(CreateStockRequestDTO _stockModel)
     {
         Stock stockModel = _stockModel.FromCreateToStock();
@@ -24,6 +29,12 @@ public class StockRepository(ApplicationDBContext context)
         return stockModel;
     }
 
+    /// <summary>
+    ///The method <c>DeleteAsync</c> gets a ID by its parameter, and upon searching and confirming it's existence in the Stock Table<br/>
+    ///It delets the item from the Stock Table.
+    /// </summary>
+    /// <param name="id">Id of the item to be deleted</param>
+    /// <returns>If the item has been successfully deleted, returns the item, otherwise, returns null</returns>
     public async Task<Stock?> DeleteAsync(int id)
     {
         Stock? stockModel = await context.Stock.FirstOrDefaultAsync(row => row.Id == id);
@@ -34,9 +45,9 @@ public class StockRepository(ApplicationDBContext context)
     }
 
     /// <summary>
-    /// Method <c>GetAllAsync</c> recieves a QueryObject instance as a param and, based on the query, it threat the data
+    /// Recieves a QueryObject instance as a param and, based on the query, it threat the data
     /// on the specified way, verifying if it has any of the specific sorting or filtering camps.<br/> Then returning
-    /// the data after this threatment.<br/>
+    /// the data from the Stock Table after this threatment.<br/>
     /// </summary>
     /// <param name="query">An object containing query parameters for filtering, sorting, and pagination.</param>
     /// <returns>A list of stocks after passing by the filters, sorting and pagination.</returns>
@@ -72,17 +83,31 @@ public class StockRepository(ApplicationDBContext context)
         .Skip(skipNumber).Take(query.PageSize)
         .ToListAsync();
     }
-
+    /// <summary>
+    /// Get the Stock from the StockTable based on its id.
+    /// </summary>
+    /// <param name="id">Stock id.</param>
+    /// <returns>Stock</returns>
     public async Task<Stock?> GetByIdAsync(int id)
     {
         return await context.Stock.FindAsync(id);
     }
-
+    /// <summary>
+    /// Checks if the stock exists on the table.
+    /// </summary>
+    /// <param name="id">Stock id.</param>
+    /// <returns>Boolean, true if the stock exists, false if it don't</returns>
     public async Task<bool> StockExists(int id)
     {
         return await context.Stock.AnyAsync(row => row.Id == id);
     }
 
+    /// <summary>
+    /// Update the stock content in the Stocks Table based on the UpdateStockRequestDTO properties.
+    /// </summary>
+    /// <param name="id">Stock id.</param>
+    /// <param name="stockDTO">Stock instance</param>
+    /// <returns>The stock after the changes</returns>
     public async Task<Stock?> UpdateAsync(int id, UpdateStockRequestDTO stockDTO)
     {
         Stock? existingStock = await context.Stock.FirstOrDefaultAsync(row => row.Id == id);

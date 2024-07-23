@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace API_A.Models;
 
+//Create a user that extends all the properties from the IdentityUser
 public class AppUser : IdentityUser
 {
 
