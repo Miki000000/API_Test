@@ -63,26 +63,20 @@ public class StockRepository(ApplicationDBContext context)
         stocks = !string.IsNullOrWhiteSpace(query.CompanyName) ? stocks = stocks.Where(s => s.CompanyName.Contains(query.CompanyName)) : stocks;
         stocks = !string.IsNullOrWhiteSpace(query.Symbol) ? stocks = stocks.Where(s => s.Symbol.Contains(query.Symbol)) : stocks;
 
-        //Checks if a sorting was passed in the query
-        if (!string.IsNullOrWhiteSpace(query.SortBy))
+        // Checks if a sorting was passed in the query
+        stocks = query.SortBy switch
         {
-            //Checks if the method passed in the SortBy property is "Symbol" or "CompanyName", and then sort it based in if it is descending or not by
-            //By another property called "IsDescending" which is a boolean
-            if (query.SortBy.Equals("Symbol", StringComparison.OrdinalIgnoreCase))
-            {
-                stocks = query.IsDescencing ? stocks.OrderBy(s => s.Symbol) : stocks.OrderByDescending(s => s.Symbol);
-            }
-            if (query.SortBy.Equals("CompanyName", StringComparison.OrdinalIgnoreCase))
-            {
-                stocks = query.IsDescencing ? stocks.OrderBy(s => s.CompanyName) : stocks.OrderByDescending(s => s.CompanyName);
-            }
-        }
+            "Symbol" => query.IsDescencing ? stocks.OrderBy(s => s.Symbol) : stocks.OrderByDescending(s => s.Symbol),
+            "CompanyName" => query.IsDescencing ? stocks.OrderByDescending(s => s.CompanyName) : stocks.OrderBy(s => s.CompanyName),
+            _ => stocks
+        };
         //Calcs the number of pages the client gonna get, and the number of elements in each page
         int skipNumber = (query.PageNumber - 1) * query.PageSize;
         return await stocks
         .Skip(skipNumber).Take(query.PageSize)
         .ToListAsync();
     }
+
     /// <summary>
     /// Get the Stock from the StockTable based on its id.
     /// </summary>

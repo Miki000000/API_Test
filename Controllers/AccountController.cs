@@ -8,14 +8,34 @@ using API_A.Models;
 using ApiTest.Dtos.Account;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ApiTest.Controllers;
 
 [Route("api/account")]
 [ApiController]
-public class AccountController(UserManager<AppUser> userManager, ITokenService tokenService)
+public class AccountController(UserManager<AppUser> userManager, ITokenService tokenService, SignInManager<AppUser> signManager)
  : ControllerBase
 {
+    [HttpPost("login")]
+    public async Task<IActionResult> Login([FromBody] LoginDTO login)
+    {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
+        AppUser? user = await userManager.Users.FirstOrDefaultAsync(user => user.UserName!.ToLower() == login.Username.ToLower());
+        if (user == null) return Unauthorized("Invalid Username");
+
+        var result = await signManager.CheckPasswordSignInAsync(user, login.Password, false);
+        if (!result.Succeeded) return Unauthorized("Invalid Password");
+
+        return Ok(new NewUserDTO
+        {
+            UserName = user.UserName!,
+            Email = user.Email!,
+            Token = tokenService.CreateToken(user)
+        }
+        );
+    }
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterDTO register)
     {
