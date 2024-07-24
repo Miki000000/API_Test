@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using API_A.Dtos.Account;
+using API_A.Interfaces;
 using API_A.Models;
 using ApiTest.Dtos.Account;
 using Microsoft.AspNetCore.Identity;
@@ -11,7 +13,7 @@ namespace ApiTest.Controllers;
 
 [Route("api/account")]
 [ApiController]
-public class AccountController(UserManager<AppUser> userManager)
+public class AccountController(UserManager<AppUser> userManager, ITokenService tokenService)
  : ControllerBase
 {
     [HttpPost("register")]
@@ -30,15 +32,20 @@ public class AccountController(UserManager<AppUser> userManager)
 
             if (!createdUser.Succeeded) return StatusCode(500, createdUser.Errors);
 
-            var roleResult = await userManager.AddToRoleAsync(appUser, "User");
+            IdentityResult roleResult = await userManager.AddToRoleAsync(appUser, "User");
 
             if (!roleResult.Succeeded) return StatusCode(500, roleResult.Errors);
 
-            return Ok("UserCreated");
+            return Ok(new NewUserDTO
+            {
+                UserName = appUser.UserName,
+                Email = appUser.Email,
+                Token = tokenService.CreateToken(appUser)
+            });
         }
         catch (Exception e)
         {
-            return StatusCode(500, e);
+            return StatusCode(500, new { Message = "An error occurred while processing your request", Details = e.Message });
         }
     }
 }

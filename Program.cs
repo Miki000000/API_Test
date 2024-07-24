@@ -1,6 +1,7 @@
 using API_A.Interfaces;
 using API_A.Models;
 using API_A.Repository;
+using API_A.Services;
 using ApiTest.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -16,6 +17,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IStockRepository, StockRepository>();
 builder.Services.AddScoped<ICommentRepository, CommentRepository>();
+builder.Services.AddScoped<ITokenService, TokenService>();
 
 //Configuration of the database conection with postgresql
 builder.Services.AddDbContext<ApplicationDBContext>(options =>
