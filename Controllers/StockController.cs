@@ -9,6 +9,7 @@ using ApiTest.Dtos.StockDTO;
 using ApiTest.Helpers;
 using ApiTest.Mappers;
 using ApiTest.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,6 +21,7 @@ public class StockController(IStockRepository stockRepo)
 : ControllerBase
 {
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> GetAll([FromQuery] QueryObject query)
     {
         List<Stock> Stocks = await stockRepo.GetAllAsync(query);
@@ -34,10 +36,11 @@ public class StockController(IStockRepository stockRepo)
         return Ok(Stock.ToStockDTO());
     }
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> Create([FromBody] CreateStockRequestDTO stockDTO) // Get the data from the body and turns it into the DTO
     {
         Stock stockModel = await stockRepo.CreateAsync(stockDTO);
-        return CreatedAtAction(nameof(GetById), new { id = stockModel.Id }, stockModel.ToStockDTO()); // Return the created model as a response
+        return CreatedAtAction(nameof(GetById), new { id = stockModel.Id }, stockDTO); // Return the created model as a response
     }
 
     [HttpPut("{id:int}")]

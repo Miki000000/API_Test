@@ -115,6 +115,21 @@ namespace ApiTest.Migrations
                     b.ToTable("Comments");
                 });
 
+            modelBuilder.Entity("ApiTest.Models.Portfolio", b =>
+                {
+                    b.Property<string>("AppUserId")
+                        .HasColumnType("text");
+
+                    b.Property<int>("StockId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("AppUserId", "StockId");
+
+                    b.HasIndex("StockId");
+
+                    b.ToTable("Portfolios");
+                });
+
             modelBuilder.Entity("ApiTest.Models.Stock", b =>
                 {
                     b.Property<int>("Id")
@@ -146,7 +161,7 @@ namespace ApiTest.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Stock");
+                    b.ToTable("Stocks");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -177,13 +192,13 @@ namespace ApiTest.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "234c862d-11ef-46b8-8022-f1e56b88bd14",
+                            Id = "ae37d55e-eadd-49e0-8a92-deeb39686667",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "f6a76d9d-21d9-4fab-a753-ff2d69066dae",
+                            Id = "6ab29cf5-90f4-4b28-828d-5e25470fc10f",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -305,6 +320,25 @@ namespace ApiTest.Migrations
                     b.Navigation("Stock");
                 });
 
+            modelBuilder.Entity("ApiTest.Models.Portfolio", b =>
+                {
+                    b.HasOne("API_A.Models.AppUser", "AppUser")
+                        .WithMany("Portfolios")
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ApiTest.Models.Stock", "Stock")
+                        .WithMany("Portfolios")
+                        .HasForeignKey("StockId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AppUser");
+
+                    b.Navigation("Stock");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -356,9 +390,16 @@ namespace ApiTest.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("API_A.Models.AppUser", b =>
+                {
+                    b.Navigation("Portfolios");
+                });
+
             modelBuilder.Entity("ApiTest.Models.Stock", b =>
                 {
                     b.Navigation("Comments");
+
+                    b.Navigation("Portfolios");
                 });
 #pragma warning restore 612, 618
         }

@@ -37,7 +37,7 @@ public class TokenService(IConfiguration config)
 
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
-        SecurityTokenDescriptor tokenDescriptor = new SecurityTokenDescriptor
+        var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(claims),
             Expires = DateTime.Now.AddDays(7),
@@ -47,7 +47,6 @@ public class TokenService(IConfiguration config)
         };
 
         var tokenHandler = new JwtSecurityTokenHandler();
-
         SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
 
         return tokenHandler.WriteToken(token);

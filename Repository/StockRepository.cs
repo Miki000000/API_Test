@@ -24,7 +24,7 @@ public class StockRepository(ApplicationDBContext context)
     public async Task<Stock> CreateAsync(CreateStockRequestDTO _stockModel)
     {
         Stock stockModel = _stockModel.FromCreateToStock();
-        await context.Stock.AddAsync(stockModel);
+        await context.Stocks.AddAsync(stockModel);
         await context.SaveChangesAsync();
         return stockModel;
     }
@@ -37,9 +37,9 @@ public class StockRepository(ApplicationDBContext context)
     /// <returns>If the item has been successfully deleted, returns the item, otherwise, returns null</returns>
     public async Task<Stock?> DeleteAsync(int id)
     {
-        Stock? stockModel = await context.Stock.FirstOrDefaultAsync(row => row.Id == id);
+        Stock? stockModel = await context.Stocks.FirstOrDefaultAsync(row => row.Id == id);
         if (stockModel == null) return null;
-        context.Stock.Remove(stockModel);
+        context.Stocks.Remove(stockModel);
         await context.SaveChangesAsync();
         return stockModel;
     }
@@ -55,8 +55,9 @@ public class StockRepository(ApplicationDBContext context)
     {
         //Get the database through the context database connection, including the comments through a join SQL query, turning it into
         //queryable so it can accept queries after.
-        var stocks = context.Stock
+        var stocks = context.Stocks
         .Include(table => table.Comments)
+        .Include(table => table.Portfolios)
         .AsQueryable();
 
         //Checks if the query passed in the class has the filters "CompanyName" or "Symbol", and filter by that if they do.
@@ -84,7 +85,7 @@ public class StockRepository(ApplicationDBContext context)
     /// <returns>Stock</returns>
     public async Task<Stock?> GetByIdAsync(int id)
     {
-        return await context.Stock.FindAsync(id);
+        return await context.Stocks.FindAsync(id);
     }
     /// <summary>
     /// Checks if the stock exists on the table.
@@ -93,7 +94,7 @@ public class StockRepository(ApplicationDBContext context)
     /// <returns>Boolean, true if the stock exists, false if it don't</returns>
     public async Task<bool> StockExists(int id)
     {
-        return await context.Stock.AnyAsync(row => row.Id == id);
+        return await context.Stocks.AnyAsync(row => row.Id == id);
     }
 
     /// <summary>
@@ -104,7 +105,7 @@ public class StockRepository(ApplicationDBContext context)
     /// <returns>The stock after the changes</returns>
     public async Task<Stock?> UpdateAsync(int id, UpdateStockRequestDTO stockDTO)
     {
-        Stock? existingStock = await context.Stock.FirstOrDefaultAsync(row => row.Id == id);
+        Stock? existingStock = await context.Stocks.FirstOrDefaultAsync(row => row.Id == id);
         if (existingStock == null)
         {
             return null;

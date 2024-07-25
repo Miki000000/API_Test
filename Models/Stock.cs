@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace ApiTest.Models;
+[Table("Stocks")]
 public class Stock
 {
     [Key]
@@ -19,4 +20,5 @@ public class Stock
     public string Industry { get; set; } = string.Empty;
     public long MarketCap { get; set; }
     public virtual List<Comment> Comments { get; set; } = new List<Comment>();
+    public List<Portfolio> Portfolios { get; set; } = new List<Portfolio>();
 }

@@ -20,7 +20,8 @@ public static class StockMappers
             LastDiv = stock.LastDiv,
             Industry = stock.Industry,
             MarketCap = stock.MarketCap,
-            Comments = stock.Comments.Select(c => c.toCommentDTO()).ToList()
+            Comments = stock.Comments.Select(c => c.toCommentDTO()).ToList(),
+            Portfolios = stock.Portfolios
         };
     }
     public static Stock FromCreateToStock(this CreateStockRequestDTO stock)

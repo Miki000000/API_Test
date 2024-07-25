@@ -28,11 +28,20 @@ public class AccountController(UserManager<AppUser> userManager, ITokenService t
         var result = await signManager.CheckPasswordSignInAsync(user, login.Password, false);
         if (!result.Succeeded) return Unauthorized("Invalid Password");
 
+        var token = tokenService.CreateToken(user);
+        var cookieOptions = new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = true,
+            Expires = DateTime.Now.AddDays(7)
+        };
+
+        Response.Cookies.Append("jwtToken", token, cookieOptions);
         return Ok(new NewUserDTO
         {
             UserName = user.UserName!,
             Email = user.Email!,
-            Token = tokenService.CreateToken(user)
+            Token = token
         }
         );
     }
@@ -55,12 +64,20 @@ public class AccountController(UserManager<AppUser> userManager, ITokenService t
             IdentityResult roleResult = await userManager.AddToRoleAsync(appUser, "User");
 
             if (!roleResult.Succeeded) return StatusCode(500, roleResult.Errors);
+            var token = tokenService.CreateToken(appUser);
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                Expires = DateTime.Now.AddDays(7)
+            };
 
+            Response.Cookies.Append("jwtToken", token, cookieOptions);
             return Ok(new NewUserDTO
             {
                 UserName = appUser.UserName,
                 Email = appUser.Email,
-                Token = tokenService.CreateToken(appUser)
+                Token = token
             });
         }
         catch (Exception e)

@@ -5,8 +5,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-
 namespace ApiTest.Models;
+[Table("Comments")]
 public class Comment
 {
     [Key]

@@ -17,4 +17,5 @@ public class GetStockRequestDTO
     public string Industry { get; set; } = string.Empty;
     public long MarketCap { get; set; }
     public List<GetCommentRequestDTO> Comments { get; set; } = new List<GetCommentRequestDTO>();
+    public List<Portfolio> Portfolios { get; set; } = new List<Portfolio>();
 }
